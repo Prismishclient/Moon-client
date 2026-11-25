@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "moon-client",
+  "version": "${version}",
+  "name": "Moon Client",
+  "description": "Moon Client with animated Supabase sign-in.",
+  "license": "CC0-1.0",
+  "icon": "assets/moon-client/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.moon.client.MoonClientClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
