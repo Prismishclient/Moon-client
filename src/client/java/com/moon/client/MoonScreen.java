@@ -11,6 +11,7 @@ public class MoonScreen extends Screen {
     static final Identifier pill = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/pill.png");
     static final Identifier pillfocus = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/pill_focus.png");
     static final Identifier brand = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/brand.png");
+    static final Identifier keystrokes = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/keystrokes.png");
     private final Identifier title = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/heading.png");
     private final Identifier login = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/login.png");
     private final Identifier email = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/email.png");
@@ -65,6 +66,8 @@ public class MoonScreen extends Screen {
             } else {
                 pw = addRenderableWidget(new MoonField(font, lx, y + Math.round(168 * sc), w, h, "Password", pass, true));
             }
+            em.onEnter(() -> setFocused(pw));
+            pw.onEnter(() -> send(mode));
             boolean log = mode == MoonAuth.Action.LOGIN;
             String label = log ? "Login" : mode == MoonAuth.Action.REGISTER ? "Register" : "Verify code";
             submit = addRenderableWidget(new MoonButton(lx, y + Math.round(219 * sc), w, h,
@@ -101,6 +104,10 @@ public class MoonScreen extends Screen {
                 }));
             }));
         }
+        int kx = x + Math.round(110 * sc);
+        int kw = Math.round(104 * sc);
+        addRenderableWidget(new MoonButton(kx, y + Math.round(150 * sc), kw, Math.max(12, Math.round(kw * 109f / 489f)),
+                "Keystrokes", keystrokes, () -> minecraft.gui.setScreen(new MoonKeysScreen(this))));
         addRenderableWidget(new MoonButton(width - 64, height - 24, 58, 19, "Back", null, this::onClose));
     }
 
@@ -201,8 +208,24 @@ public class MoonScreen extends Screen {
         g.nextStratum();
         g.blit(title, x + Math.round(248 * sc), y + Math.round(26 * sc),
                 x + Math.round(332 * sc), y + Math.round(70 * sc), 0f, 1f, 0f, 1f);
+        drawWasd(g, x + Math.round(114 * sc), y + Math.round(70 * sc), Math.round(96 * sc));
         g.blit(brand, x + Math.round(93 * sc), y + Math.round(267 * sc),
                 x + Math.round(210 * sc), y + Math.round(288 * sc), 0f, 1f, 0f, 1f);
+    }
+
+    /** Small W A S D preview from the Canva art, above the Keystrokes button. */
+    private void drawWasd(GuiGraphicsExtractor g, int left, int top, int total) {
+        int gap = Math.max(1, total / 50);
+        int u = (total - gap * 2) / 3;
+        int kh = Math.round(u * 141f / 126f);
+        String[] n = {"w", "a", "s", "d"};
+        int[][] p = {{u + gap, 0}, {0, kh + gap}, {u + gap, kh + gap}, {2 * (u + gap), kh + gap}};
+        for (int i = 0; i < 4; i++) {
+            var t = Identifier.fromNamespaceAndPath("moon-client", "textures/gui/keys/key_" + n[i] + ".png");
+            int kx = left + p[i][0];
+            int ky = top + p[i][1];
+            g.blit(t, kx, ky, kx + u, ky + kh, 0f, 1f, 0f, 1f);
+        }
     }
 
     @Override

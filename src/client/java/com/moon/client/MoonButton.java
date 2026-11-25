@@ -29,6 +29,12 @@ final class MoonButton extends AbstractButton {
         int y = getY();
         int w = getWidth();
         int h = getHeight();
+        if (art != null && art.equals(MoonScreen.keystrokes)) {
+            // Canva "Keystrokes" button already has its own pill.
+            int lift = active && isHoveredOrFocused() ? 1 : 0;
+            g.blit(art, x, y - lift, x + w, y + h - lift, 0f, 1f, 0f, 1f);
+            return;
+        }
         var bg = isHoveredOrFocused() ? MoonScreen.pillfocus : MoonScreen.pill;
         g.blit(bg, x, y, x + w, y + h, 0f, 1f, 0f, 1f);
         if (art != null) {
